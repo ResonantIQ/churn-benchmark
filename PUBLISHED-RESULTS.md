@@ -6,15 +6,25 @@ T90 cutoff. All-evidence (`B-all` / `E-css`) slice: 178 scorable accounts
 `README.md` → **Data provenance**). Run date: **2026-07-17**. These are the
 numbers to compare your own run against.
 
-| arm | what it is | reproducible from this pack? | n | positives | acc | P | R | F1 | AUC |
+| arm | what it is | reproducible from this pack? | n | positives | acc | P [95% CI] | R [95% CI] | F1 | AUC |
 |---|---|---|---|---|---|---|---|---|---|
-| Resonant IQ engine (internal arm label: `E-css`) | deterministic churn-signal engine | **No**: requires our production pipeline | 178 | 32 | 0.91 | **0.94** | **0.53** | 0.68 | **0.93** |
-| `B-all` @ `openai/gpt-5` (OpenRouter) | LLM baseline, full evidence, one-shot | **Yes: this pack** | 178 | 32 | 0.34 | 0.21 | 0.97 | 0.34 | 0.75 |
-| `B-all` @ `claude-opus-4-8` (Anthropic native API) | LLM baseline, full evidence, one-shot | **Yes: this pack** | 178 | 32 | 0.19 | 0.18 | 1.00 | 0.31 | 0.78 |
-| `B-all` @ `google/gemini-2.5-pro` (OpenRouter) | LLM baseline, full evidence, one-shot | **Yes: this pack** | 178 | 32 | 0.19 | 0.18 | 1.00 | 0.31 | 0.64 |
-| `B-all` @ `deepseek/deepseek-chat` (OpenRouter) | LLM baseline, full evidence, one-shot | **Yes: this pack** | 178 | 32 | 0.40 | 0.23 | 1.00 | 0.37 | 0.70 |
-| `B-all` @ `moonshotai/kimi-k2` (OpenRouter) | LLM baseline, full evidence, one-shot | **Yes: this pack** | 178 | 32 | 0.22 | 0.19 | 1.00 | 0.32 | 0.63 |
-| `B-all` @ `z-ai/glm-4.6` (OpenRouter) | LLM baseline, full evidence, one-shot | **Yes: this pack** | 178 | 32 | 0.21 | 0.18 | 1.00 | 0.31 | 0.61 |
+| Resonant IQ engine (internal arm label: `E-css`) | deterministic churn-signal engine | **No**: requires our production pipeline | 178 | 32 | 0.91 | **0.94** [0.74, 0.99] | **0.53** [0.36, 0.69] | 0.68 | **0.93** |
+| `B-all` @ `openai/gpt-5` (OpenRouter) | LLM baseline, full evidence, one-shot | **Yes: this pack** | 178 | 32 | 0.34 | 0.21 [0.15, 0.28] | 0.97 [0.84, 0.99] | 0.34 | 0.75 |
+| `B-all` @ `claude-opus-4-8` (Anthropic native API) | LLM baseline, full evidence, one-shot | **Yes: this pack** | 178 | 32 | 0.19 | 0.18 [0.13, 0.24] | 1.00 [0.89, 1.00] | 0.31 | 0.78 |
+| `B-all` @ `google/gemini-2.5-pro` (OpenRouter) | LLM baseline, full evidence, one-shot | **Yes: this pack** | 178 | 32 | 0.19 | 0.18 [0.13, 0.24] | 1.00 [0.89, 1.00] | 0.31 | 0.64 |
+| `B-all` @ `deepseek/deepseek-chat` (OpenRouter) | LLM baseline, full evidence, one-shot | **Yes: this pack** | 178 | 32 | 0.40 | 0.23 [0.17, 0.31] | 1.00 [0.89, 1.00] | 0.37 | 0.70 |
+| `B-all` @ `moonshotai/kimi-k2` (OpenRouter) | LLM baseline, full evidence, one-shot | **Yes: this pack** | 178 | 32 | 0.22 | 0.19 [0.14, 0.26] | 1.00 [0.89, 1.00] | 0.32 | 0.63 |
+| `B-all` @ `z-ai/glm-4.6` (OpenRouter) | LLM baseline, full evidence, one-shot | **Yes: this pack** | 178 | 32 | 0.21 | 0.18 [0.13, 0.24] | 1.00 [0.89, 1.00] | 0.31 | 0.61 |
+
+## Uncertainty
+
+Precision and recall carry Wilson 95% confidence intervals computed from the underlying confusion counts (32 positives; the engine flagged 18 accounts: 17 true, 1 false). With this few positives the intervals are wide, and we would rather state that than have you discover it. Two things the intervals do establish:
+
+- The engine's precision lower bound (0.74) sits above every baseline's precision upper bound (0.24 to 0.31). The intervals do not overlap, so the headline comparison is not an artifact of the small sample.
+- The point estimates themselves (0.94, 0.53) should be read as "on this corpus," not as tight universal constants. A different draw of 32 churners would move them.
+
+Accuracy and F1 bootstrap intervals for the engine row, from the original run: acc [0.87, 0.95], F1 [0.52, 0.82].
+
 
 ## Run metadata
 
